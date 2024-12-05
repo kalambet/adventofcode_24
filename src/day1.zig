@@ -3,7 +3,6 @@ const ArrayList = std.ArrayList;
 const HashMap = std.AutoHashMap;
 const Tuple = std.meta.Tuple;
 
-
 pub fn count_safe_reports() !void {
     var file = try std.fs.cwd().openFile("input_day1.txt", .{});
     defer file.close();
@@ -18,7 +17,7 @@ pub fn count_safe_reports() !void {
 
         var data = std.mem.split(u8, line, " ");
         try report.append(try std.fmt.parseInt(i32, data.first(), 10));
-        while(data.next()) |cur_str|{
+        while (data.next()) |cur_str| {
             try report.append(try std.fmt.parseInt(i32, cur_str, 10));
         }
 
@@ -35,21 +34,21 @@ fn is_report_safe_part2(report: ArrayList(i32)) !bool {
         return true;
     }
     const size: usize = report.items.len;
-    for(0..size) |i| {
+    for (0..size) |i| {
         var copy = try report.clone();
         _ = copy.orderedRemove(i);
-        if(try is_report_safe_part1(copy)) {
+        if (try is_report_safe_part1(copy)) {
             return true;
         }
     }
     return false;
 }
 
-fn is_report_safe_part1(report: ArrayList(i32)) !bool{
+fn is_report_safe_part1(report: ArrayList(i32)) !bool {
     const size = report.items.len;
     var dir: i8 = 0; // -1 means dec, +1 means acc
-    for(0..size-1) |idx| {
-        const result = analyze_pair(report.items[idx], report.items[idx+1], dir);
+    for (0..size - 1) |idx| {
+        const result = analyze_pair(report.items[idx], report.items[idx + 1], dir);
         if (!result[0]) {
             return false;
         }
@@ -62,21 +61,21 @@ fn is_report_safe_part1(report: ArrayList(i32)) !bool{
     return true;
 }
 
-fn analyze_pair(cur: i32, prev: i32, direction: i8) Tuple(&.{bool, i8}) {
+fn analyze_pair(cur: i32, prev: i32, direction: i8) Tuple(&.{ bool, i8 }) {
     const diff = cur - prev;
     var dir = direction;
     if (diff < 0 and dir <= 0) {
         dir = -1; //dec
         if (diff < -3) {
-            return .{false, dir};
+            return .{ false, dir };
         }
     } else if (diff > 0 and dir >= 0) {
         dir = 1; // acc
         if (diff > 3) {
-            return .{false, dir};
+            return .{ false, dir };
         }
     } else if ((diff < 0 and dir > 0) or diff == 0 or (diff > 0 and dir < 0)) {
-        return .{false, dir};
+        return .{ false, dir };
     }
-    return .{true, dir};
+    return .{ true, dir };
 }

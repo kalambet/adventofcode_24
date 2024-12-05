@@ -24,7 +24,6 @@ pub fn search1() !void {
         try links.append(try std.fmt.parseInt(i32, splits.next().?, 10));
     }
 
-
     std.sort.heap(i32, rights.items, {}, std.sort.asc(i32));
     std.sort.heap(i32, links.items, {}, std.sort.asc(i32));
 
@@ -72,7 +71,7 @@ pub fn search2() !void {
     var accum: i32 = 0;
     for (links.items) |value| {
         if (rights.contains(value)) {
-            accum += value*rights.get(value).?;
+            accum += value * rights.get(value).?;
         }
     }
 
